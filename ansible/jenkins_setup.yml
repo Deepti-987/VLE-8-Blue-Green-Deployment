@@ -1,0 +1,27 @@
+---
+- name: Configure Blue Green Deployment Server
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Check Docker installation
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Display Docker version
+      debug:
+        msg: "{{ docker_version.stdout }}"
